@@ -25,14 +25,33 @@ We are using Javascript, various APIs, SuperAgent
 
 /////////////////////////////////////////////////////////////
 
+## Feature 1
 Number and name of feature: Feature 1 Consistantly Format Data
 
 Estimate of time needed to complete:  1 hour
 
 Start time: 1:37pm
 
-Finish time: _____
+Finish time: 4:11pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 2 hrs 48min
+
+## Feature 2
+Estimate of time needed to complete:  1 hour
+
+Start time: 4:14pm
+
+Finish time: 5:13pm
+
+Actual time needed to complete: 59 min
+
+## Feature 3
+Estimate of time needed to complete:  1 hour
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete: 
 
 /////////////////////////////////////////////////////////////

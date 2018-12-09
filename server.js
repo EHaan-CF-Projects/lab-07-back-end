@@ -18,6 +18,7 @@ app.use(cors());
 //Routes
 app.get('/location', getLocation)
 app.get('/weather', getWeather)
+app.get('/yelp', getYelp)
 
 // Handlers
 
@@ -35,6 +36,13 @@ function getWeather(request, response) {
     })
 }
 
+function getYelp(request, response) {
+    return searchYelp(request.query.data)
+    .then(yelpData => {
+    response.send(yelpData);
+    })
+}
+
 // Constructors
 function Location(location){
     this.formatted_query = location.formatted_address;
@@ -45,6 +53,14 @@ function Location(location){
 function Weather(weather) {
     this.forecast = weather.summary;
     this.time = new Date(weather.time * 1000).toDateString();
+}
+
+function ResRec(yelp) {
+    this.name = yelp.name;
+    this.image_url = yelp.image_url;
+    this.price = yelp.price;
+    this.rating = yelp.rating;
+    this.url = yelp.url;
 }
 
 // Search for Resource
@@ -70,8 +86,22 @@ function searchWeather(query) {
             return weather;
         })
     })
+    .catch(err => console.error(err));
 }
 
+function  searchYelp(query) {
+    const url = `https://api.yelp.com/v3/businesses/search?latitude=${query.latitude}&longitude=${query.longitude}`;
+    return superagent.get(url)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then( result => {
+        let recommendations = result.body.businesses;
+        return recommendations.map(restaurant => {
+            let resRec = new ResRec(restaurant);
+            return resRec;
+        })
+    })
+    .catch(err => console.error(err));
+}
 
 
 //Give Error Messages if incorrect
