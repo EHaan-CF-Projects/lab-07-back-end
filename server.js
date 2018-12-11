@@ -19,6 +19,7 @@ app.use(cors());
 app.get('/location', getLocation)
 app.get('/weather', getWeather)
 app.get('/yelp', getYelp)
+app.get('/movies', getMovies)
 
 // Handlers
 
@@ -43,6 +44,13 @@ function getYelp(request, response) {
     })
 }
 
+function getMovies(request, response) {
+    return searchMovies(request.query.data)
+    .then(movieData => {
+    reponse.send(movieData);
+    })
+}
+
 // Constructors
 function Location(location){
     this.formatted_query = location.formatted_address;
@@ -61,6 +69,17 @@ function ResRec(yelp) {
     this.price = yelp.price;
     this.rating = yelp.rating;
     this.url = yelp.url;
+}
+
+function Movies(movies) {
+    this.title = movies.title;
+    console.log(movies.title);
+    this.overview = movies.overview;
+    this.average_votes = movies.average_votes;
+    this.total_votes = movies.total_votes;
+    this.image_url = movies.image_url;
+    this.popularity = movies.popularity;
+    this.released_on = movies.released_on;
 }
 
 // Search for Resource
@@ -95,7 +114,7 @@ function  searchYelp(query) {
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then( result => {
         let recommendations = result.body.businesses;
-        return recommendations.map(restaurant => {
+        return recommendations (restaurant => {
             let resRec = new ResRec(restaurant);
             return resRec;
         })
@@ -103,7 +122,19 @@ function  searchYelp(query) {
     .catch(err => console.error(err));
 }
 
-
+function searchMovies(query) {
+    const url=`https://api.themoviedb.org/3/movie/76341?api_key=${process.env.MOVIES_API_KEY}&query=${query.short_name}`;
+    return superagent.get(url)
+    .then(result => {
+        let recommendations = result.movies;
+        console.log(result.movies);
+        return recommendations.map(movies => {
+            let movie = new Movies(movies);
+            return movie;
+        })
+    })
+    .catch(err => console.error(err));
+}
 //Give Error Messages if incorrect
 
 app.get('/*', function(req, res) {
