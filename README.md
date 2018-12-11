@@ -48,7 +48,7 @@ Actual time needed to complete: 59 min
 ## Feature 3
 Estimate of time needed to complete:  1 hour
 
-Start time: 
+Start time: 6:10pm
 
 Finish time: 
 
