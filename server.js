@@ -47,7 +47,7 @@ function getYelp(request, response) {
 function getMovies(request, response) {
     return searchMovies(request.query.data)
     .then(movieData => {
-    reponse.send(movieData);
+    response.send(movieData);
     })
 }
 
@@ -56,7 +56,9 @@ function Location(location){
     this.formatted_query = location.formatted_address;
     this.latitude = location.geometry.location.lat;
     this.longitude = location.geometry.location.lng;
-  }
+    this.short_name = location.address_components[0].short_name;
+    console.log(location.address_components[0].short_name);
+}
 
 function Weather(weather) {
     this.forecast = weather.summary;
@@ -123,11 +125,11 @@ function  searchYelp(query) {
 }
 
 function searchMovies(query) {
-    const url=`https://api.themoviedb.org/3/movie/76341?api_key=${process.env.MOVIES_API_KEY}&query=${query.short_name}`;
+    const url=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIES_API_KEY}&query=${query.short_name}`;
     return superagent.get(url)
-    .then(result => {
-        let recommendations = result.movies;
-        console.log(result.movies);
+    .then( localMovies => {
+        let recommendations = localMovies.body.results;
+        console.log(recommendations);
         return recommendations.map(movies => {
             let movie = new Movies(movies);
             return movie;
